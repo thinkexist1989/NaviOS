@@ -1,0 +1,33 @@
+#include "coordinate.h"
+void STATE :: KalmanStateUpdate (const INPUT* Input) 
+{	
+	x = x + Input->GetTranslation () * cos (orientation + Input->GetAngle () / 2);
+	y = y + Input->GetTranslation () * sin (orientation + Input->GetAngle () / 2);
+	orientation = orientation + Input->GetAngle ();
+}
+void STATE :: KalmanCovUpdate (const INPUT* Input) 
+{
+	MATRIX Phi (3, 3);
+	double* P = Phi.GetHead ();
+	MATRIX temp_1 (3, 3);
+	//phi = [ 1, 0, -delta(1) * sin( r_post(3) + delta(2) / 2 );
+    //        0, 1, delta(1) * cos( r_post(3) + delta(2) / 2 );
+    //        0, 0, 1                                            ];    
+	P[0] = P[4] = P[8] = 1;
+	P[1] = P[3] = P[6] = P[7] = 0;
+	P[2] = - Input->GetTranslation () * sin (orientation + Input->GetAngle () / 2);
+	P[5] = Input->GetTranslation () * cos (orientation + Input->GetAngle () / 2);
+
+	//y = phi * P_post * phi' + Q;
+	Phi.multiple (cov, temp_1);
+	temp_1.multiple (Phi, cov);
+	cov.add(state_update_uncertainty,cov);
+}
+void STATE :: KalmanGain(MATRIX* observation_uncertainty) 
+{
+	//K = P_apr * H' * ( H * P_apr * H'+ R ) ^ ( - 1 );
+	MATRIX temp_1 (3, 3), temp_2 (3, 3), temp_3 (3, 3);
+	cov.multiple (observation_matrix_trans, temp_1);
+	observation_matrix.multiple (cov, temp_2);
+	temp_2.multiple (observation_matrix_trans, temp_3);
+	temp_3.add (*observation_uncertainty, temp_3);//

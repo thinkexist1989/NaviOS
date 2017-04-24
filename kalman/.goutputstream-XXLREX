@@ -1,0 +1,19 @@
+#include "fstream"
+#include <math.h>
+#include <stdlib.h>
+#include "iostream"
+#include "string"
+#include "matrix.h"
+
+#ifndef COORDINATE_H
+#define COORDINATE_H
+
+extern MATRIX state_update_uncertainty;
+extern MATRIX observation_matrix;
+extern MATRIX observation_matrix_trans;
+extern MATRIX observation_uncertainty;
+
+#define WHEEL_DISTANCE 250
+#define MAX_RECEIVER_TABLE_SIZE 10
+#define MAX_PACKAGE_SINGLE_TABLE_SIZE 100
+//INCREMENT

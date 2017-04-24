@@ -1,0 +1,6 @@
+#include "coordinate.h"
+extern RECEIVER_TABLE table;
+extern PACKAGE_MULTI package_multi;
+extern PACKAGE_SINGLE package_single;
+
+/*

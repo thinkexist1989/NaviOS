@@ -1,0 +1,78 @@
+#include "coordinate.h"
+using namespace std;
+COORDINATE :: COORDINATE ()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+}
+COORDINATE :: COORDINATE (double X, double Y, double Z)
+{
+	x = X;
+	y = Y;
+	z = Z;
+}
+COORDINATE :: COORDINATE (const COORDINATE &c)
+{
+	x = c.x;
+	y = c.y;
+	z = c.z;
+}
+COORDINATE& COORDINATE :: operator = (const COORDINATE& Coordinate)
+{
+	x = Coordinate.x;
+	y = Coordinate.y;
+	z = Coordinate.z;
+	return *this;
+}
+COORDINATE :: ~COORDINATE ()
+{
+}
+void COORDINATE :: Update (double X, double Y, double Z)
+{
+	x = X;
+	y = Y;
+	z = Z;
+}
+void COORDINATE :: Update (const COORDINATE &c)
+ {
+	 x = c.x;
+	 y = c.y;
+	 z = c.z;
+ }
+double COORDINATE :: GetX() const
+{
+	return x;
+}
+double COORDINATE :: GetY() const
+{
+	return y;
+}
+double COORDINATE :: GetZ() const
+{
+	return z;
+}
+bool COORDINATE :: Collinear (const COORDINATE c1, const COORDINATE c2) const
+{
+	double temp[6];
+	bool key[2];
+	temp[0] = c2.x - c1.x;
+	temp[1] = c1.x - x;
+	temp[2] = c2.y - c1.y;
+	temp[3] = c1.y - y;
+	key[0] = ( temp[0] == temp[1] );
+	key[1] = ( temp[2] == temp[3] );
+	return ( key[0] | key[1] );
+}
+
+STATE :: STATE() : COORDINATE (0, 0, 0), cov(3, 3), kalman_gain (3, 3)
+{
+
+}
+STATE :: STATE(const STATE& State) 
+	: COORDINATE(State.GetX(), State.GetY(), State.GetZ())
+{
+	//orientation = State.GetOrientation();
+}
+STATE :: STATE(double X, double Y, double Z, double Orient, MATRIX Cov) 
+	: COORDINATE (X, Y, Z), cov(Cov), kalman_gain (3, 3) //

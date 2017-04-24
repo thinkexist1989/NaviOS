@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/myImage">
+        <file>images/R66.ico</file>
+    </qresource>
+</RCC>
